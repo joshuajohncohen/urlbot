@@ -11,3 +11,5 @@ bin           = @["urlbot"]
 # Dependencies
 
 requires "nim >= 2.0.0"
+
+requires "puppy >= 2.1.2"
