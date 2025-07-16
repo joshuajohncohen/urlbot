@@ -13,3 +13,5 @@ bin           = @["urlbot"]
 requires "nim >= 2.0.0"
 
 requires "puppy >= 2.1.2"
+requires "uuids >= 0.1.12"
+requires "dimscord >= 1.6.0"
