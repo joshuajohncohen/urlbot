@@ -28,6 +28,12 @@ proc onReady(s: Shard, r: Ready) {.event(discord).} =
             name: "inputurl",
             description: "The URL you want to shorten.",
             required: some true
+          ),
+          ApplicationCommandOption(
+            kind: acotStr,
+            name: "desiredslug",
+            description: "What you want to come after the slash.",
+            required: some false
           )
         ]
       )
@@ -41,8 +47,13 @@ proc interactionCreate(s: Shard, i: Interaction) {.event(discord).} =
     case data.name:
       of "shorten":
         let originalURL = data.options["inputurl"].str
-        let shortenedURL = simpleShorten originalURL
-        msg = &":grin: Your shortened URL is: {shortenedURL}"
+        if data.options.hasKey("desiredslug"):
+          let desiredSlug = data.options["desiredslug"].str
+          let shortenedURL = simpleShorten(originalURL, some desiredSlug)
+          msg = &":grin: Your shortened URL is: {shortenedURL}"
+        else:
+          let shortenedURL = simpleShorten originalURL
+          msg = &":grin: Your shortened URL is: {shortenedURL}"
       else:
         msg = ":x: That's not a valid command!"
   
@@ -53,6 +64,6 @@ proc interactionCreate(s: Shard, i: Interaction) {.event(discord).} =
     )
   )
 
-discord.startSession(
+waitFor discord.startSession(
   gateway_intents = {giGuildMessages, giGuilds, giGuildMembers, giMessageContent}
 )
